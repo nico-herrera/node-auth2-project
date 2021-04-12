@@ -99,7 +99,6 @@ const validateRoleName = (req, res, next) => {
       "message": "Role name can not be longer than 32 chars"
     }
   */
-    try {
       let { role_name } = req.body;
       const isValid = (role_name) => {
         return Boolean(role_name && typeof role_name === "string");
@@ -117,8 +116,9 @@ const validateRoleName = (req, res, next) => {
         } else {
           next();
         }
-  next();
-}
+      }
+   
+  }
 
 module.exports = {
   restricted,
