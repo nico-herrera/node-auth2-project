@@ -99,24 +99,24 @@ const validateRoleName = (req, res, next) => {
       "message": "Role name can not be longer than 32 chars"
     }
   */
-
-
-  // try {
-    
-  //   if (roleName) {
-  //     req.role_name = roleName;
-  //     next();
-  //   } else if (!roleName || roleName.length === 0) {
-  //     req.role_name = "student";
-  //     next();
-  //   } else if (roleName === 'admin') {
-  //     res.status(422).json({message: "Role name can not be admin"})
-  //   } else if (roleName.length > 32) {
-  //     res.status(422).json({message: "Role name can not be longer than 32 chars"})
-  //   }
-  // } catch (err) {
-  //   next(err);
-  // }
+    try {
+      let { role_name } = req.body;
+      const isValid = (role_name) => {
+        return Boolean(role_name && typeof role_name === "string");
+      };
+      if (!req.body.role_name || req.body.role_name === " ") {
+        req.body.role_name = "student";
+        next();
+      } else if (isValid(role_name)) {
+        if (req.body.role_name.trim() === "admin") {
+          res.status(422).json({ message: "Role can not be admin" });
+        } else if (req.body.role_name.trim().length > 32) {
+          res.status(422).json({
+            message: "Role name can not be longer than 32 chars",
+          });
+        } else {
+          next();
+        }
   next();
 }
 
