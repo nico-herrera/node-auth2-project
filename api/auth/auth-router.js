@@ -56,12 +56,13 @@ router.post("/login", checkUsernameExists, async (req, res, next) => {
     const {username, password} = req.body;
 
     try {
-      const [user] = await Users.findBy({username});
+      const [user] = await Users.findBy({username: username});
+
       if (user && bcrypt.compareSync(password, user.password)) {
         const token = generateToken(user);
-        res.send(200).json({message: `${username} is back!`, token: token})
+        res.status(200).json({message: `${username} is back!`, token: token})
       } else {
-        res.send(404).json({message: "Invalid login credentials"})
+        res.status(404).json({message: "Invalid login credentials"})
       }
     } catch (err) {
       next(err);
@@ -70,14 +71,15 @@ router.post("/login", checkUsernameExists, async (req, res, next) => {
 
 const generateToken = (user) => {
   const payload = {
-    subject: user.id,
+    subject: user.user_id,
     username: user.username,
-    rolename: user.rolename
+    rolename: user.role_name
   };
 
   const options = {
     expiresIn: "1d"
   };
+  console.log(payload, "generateToken");
 
   const token = jwt.sign(payload, secrets.jwtSecret, options);
 
